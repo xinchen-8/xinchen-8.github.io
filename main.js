@@ -1,6 +1,7 @@
 document.querySelector('.bg-style').style.backgroundColor = 'white';
 
 function RandomDots(container, numberOfDots) {
+    const offsetHeight = container.style.top;
     const containerWidth = container.offsetWidth;
     const containerHeight = container.offsetHeight;
     const dots = [];
@@ -9,8 +10,8 @@ function RandomDots(container, numberOfDots) {
         const dot = document.createElement('div');
         dot.classList.add('dot');
         
-        const x = Math.random() * containerWidth+1;
-        const y = Math.random() * containerHeight+1;
+        const x = Math.random() * containerWidth;
+        const y = Math.random() * containerHeight + offsetHeight;
         dot.style.left = `${x}px`;
         dot.style.top = `${y}px`;
 
@@ -22,11 +23,15 @@ function RandomDots(container, numberOfDots) {
             element: dot,
             x: x,
             y: y,
-            dx: (Math.random() - 0.5) * 0.5,
-            dy: (Math.random() - 0.5) * 0.5 
+            dx: (Math.random() - 0.5) * 5,
+            dy: (Math.random() - 0.5) * 5
         });
 
         container.appendChild(dot);
+    }
+    function limitSpeed(dot){
+        if (Math.abs(dot.dx) < 0.2) dot.dx *= 5;
+        if (Math.abs(dot.dy) < 0.2) dot.dy *= 5;
     }
 
     function updateDots() {
@@ -38,16 +43,20 @@ function RandomDots(container, numberOfDots) {
             //four border
             if(dot.x < -parseFloat(dot.element.style.width) && dot.dx < 0){
                 dot.x = containerWidth + parseFloat(dot.element.style.width);
+                limitSpeed(dot);
             }
-            if(dot.y < -parseFloat(dot.element.style.height) && dot.dy < 0){
-                dot.y = containerHeight + parseFloat(dot.element.style.height);
+            if(dot.y < offsetHeight-parseFloat(dot.element.style.height) && dot.dy < 0){
+                dot.y = offsetHeight + containerHeight + parseFloat(dot.element.style.height);
+                limitSpeed(dot);
             }
             if(dot.x > containerWidth + parseFloat(dot.element.style.width) && dot.dx > 0){
                 dot.x = -parseFloat(dot.element.style.width);
+                limitSpeed(dot);
             }
-            if(dot.y > containerHeight + parseFloat(dot.element.style.height) && dot.dy > 0)
-                dot.y = -parseFloat(dot.element.style.height);
-
+            if(dot.y > offsetHeight + containerHeight + parseFloat(dot.element.style.height) && dot.dy > 0){
+                dot.y = offsetHeight-parseFloat(dot.element.style.height);
+                limitSpeed(dot);
+            }
             dot.element.style.left = `${dot.x}px`;
             dot.element.style.top = `${dot.y}px`;
         });
@@ -59,5 +68,5 @@ function RandomDots(container, numberOfDots) {
 
 window.onload = function() {
     const container = document.querySelector('.bg-style');
-    RandomDots(container, 15);
+    RandomDots(container, 20);
 };
