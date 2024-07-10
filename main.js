@@ -68,5 +68,5 @@ function RandomDots(container, numberOfDots) {
 
 window.onload = function() {
     const container = document.querySelector('.bg-style');
-    RandomDots(container, 20);
+    RandomDots(container, 30);
 };
